@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.KechengDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.kecheng_name as kechengName
+        ,a.kecheng_photo as kechengPhoto
+        ,a.kecheng_video as kechengVideo
+        ,a.kecheng_types as kechengTypes
+        ,a.kecheng_clicknum as kechengClicknum
+        ,a.zan_number as zanNumber
+        ,a.cai_number as caiNumber
+        ,a.kecheng_content as kechengContent
+        ,a.kecheng_delete as kechengDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.KechengView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM kecheng  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.kechengName != '' and params.kechengName != null and params.kechengName != 'null' ">
+                and a.kecheng_name like CONCAT('%',#{params.kechengName},'%')
+            </if>
+            <if test=" params.kechengVideo != '' and params.kechengVideo != null and params.kechengVideo != 'null' ">
+                and a.kecheng_video like CONCAT('%',#{params.kechengVideo},'%')
+            </if>
+            <if test="params.kechengTypes != null and params.kechengTypes != ''">
+                and a.kecheng_types = #{params.kechengTypes}
+            </if>
+            <if test="params.kechengClicknumStart != null and params.kechengClicknumStart != ''">
+                <![CDATA[  and a.kecheng_clicknum >= #{params.kechengClicknumStart}   ]]>
+            </if>
+            <if test="params.kechengClicknumEnd != null and params.kechengClicknumEnd != ''">
+                <![CDATA[  and a.kecheng_clicknum <= #{params.kechengClicknumEnd}   ]]>
+            </if>
+             <if test="params.kechengClicknum != null and params.kechengClicknum != ''">
+                and a.kecheng_clicknum = #{params.kechengClicknum}
+             </if>
+            <if test="params.zanNumberStart != null and params.zanNumberStart != ''">
+                <![CDATA[  and a.zan_number >= #{params.zanNumberStart}   ]]>
+            </if>
+            <if test="params.zanNumberEnd != null and params.zanNumberEnd != ''">
+                <![CDATA[  and a.zan_number <= #{params.zanNumberEnd}   ]]>
+            </if>
+             <if test="params.zanNumber != null and params.zanNumber != ''">
+                and a.zan_number = #{params.zanNumber}
+             </if>
+            <if test="params.caiNumberStart != null and params.caiNumberStart != ''">
+                <![CDATA[  and a.cai_number >= #{params.caiNumberStart}   ]]>
+            </if>
+            <if test="params.caiNumberEnd != null and params.caiNumberEnd != ''">
+                <![CDATA[  and a.cai_number <= #{params.caiNumberEnd}   ]]>
+            </if>
+             <if test="params.caiNumber != null and params.caiNumber != ''">
+                and a.cai_number = #{params.caiNumber}
+             </if>
+            <if test=" params.kechengContent != '' and params.kechengContent != null and params.kechengContent != 'null' ">
+                and a.kecheng_content like CONCAT('%',#{params.kechengContent},'%')
+            </if>
+            <if test="params.kechengDeleteStart != null and params.kechengDeleteStart != ''">
+                <![CDATA[  and a.kecheng_delete >= #{params.kechengDeleteStart}   ]]>
+            </if>
+            <if test="params.kechengDeleteEnd != null and params.kechengDeleteEnd != ''">
+                <![CDATA[  and a.kecheng_delete <= #{params.kechengDeleteEnd}   ]]>
+            </if>
+             <if test="params.kechengDelete != null and params.kechengDelete != ''">
+                and a.kecheng_delete = #{params.kechengDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test="params.insertTime != null and params.insertTime != ''">
+                and a.insert_time = #{params.insertTime}
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
